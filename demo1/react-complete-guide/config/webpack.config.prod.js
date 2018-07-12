@@ -172,9 +172,9 @@ module.exports = {
                 {
                   fallback: {
                     loader: require.resolve('style-loader'),
-                    options: {
-                      hmr: false,
-                    },
+                    // options: {
+                    //   hmr: false,
+                    // },
                   },
                   use: [
                     {

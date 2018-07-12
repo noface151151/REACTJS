@@ -1,21 +1,34 @@
-import React from 'react';
+import React ,{Component} from 'react';
 import classes from './Modal.css';
-import Aux from '../../../hoc/Auxxx';
+import Aux from '../../../hoc/Auxxx/Auxxx';
 import Backdrop from '../Backdrop/Backdrop'
-import Button from '../Button/Button';
-const modal=(props)=>(
-    <Aux>
-        <Backdrop show={props.show} clicked={props.Modalclosed}/>
-        <div style={{
-            transform:props.show?'translateY(0)':'translateY(-100vh)',
-            opacity:props.show?'1':'0'
-        }} className={classes.Modal}>
-            {props.children}
-        <Button buttonType="Success" clicked={()=>props.cancelPurchaseHandler()}> CANCEL </Button>
-        <Button buttonType="Danger" clicked={()=>props.continuePurchaseHandler()}> CONTINUE </Button>
-        
-        </div>
-    </Aux>
-);
+//import Button from '../Button/Button';
+class Modal extends Component{
 
-export default modal;
+    shouldComponentUpdate(nextProps,nextState){
+        return nextProps.show!==this.props.show;
+    }
+    componentWillUpdate(){
+        console.log('[Modal] WillUpdate' )
+    }
+    
+    render(){
+        return(
+        <Aux>
+            <Backdrop show={this.props.show} clicked={this.props.Modalclosed}/>
+            <div 
+            className={classes.Modal}
+            style={{
+                transform:this.props.show?'translateY(0)':'translateY(-100vh)',
+                opacity:this.props.show?'1':'0'
+            }} >
+                {this.props.children}
+            
+            
+            </div>
+        </Aux>
+        )
+    }
+}
+
+export default Modal;
