@@ -21,13 +21,14 @@ const withErrorHandler =(WrappedComponent,axios)=>{
             axios.interceptors.request.eject(this.reqInterceptor);
             axios.interceptors.response.eject(this.resInterceptor);
         }
-        errorComfirmedHandler(){
+        errorComfirmedHandler=()=>{
             this.setState({error:null});
+         //   console.log(this.state.error)
         }
         render(){
         return (
             <Aux>
-                <Modal show={this.state.error} clicked={this.errorComfirmedHandler}>
+                <Modal show={this.state.error} Modalclosed={this.errorComfirmedHandler}>
                 {this.state.error? this.state.error.message:null}
                 </Modal>
                 <WrappedComponent {...this.props} />

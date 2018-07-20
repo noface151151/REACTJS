@@ -8,7 +8,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-order';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHangler';
-import * as actionTypes from '../../store/action';
+import * as actions from '../../store/actions/index';
 
 
 class BurgerBuilder extends Component{
@@ -21,19 +21,13 @@ class BurgerBuilder extends Component{
         //ingredients:null,
        // totalPrice: 4 ,
       //  purchasable:false,
-        purchasing:false,
-        loading:false,
-        error:false
+        purchasing:false
+      //  loading:false,
+      //  error:false
     }
 
     componentDidMount(){
-        // axios.get('/ingredients.json')
-        //     .then(resp=>{
-        //         this.setState({ingredients:resp.data});
-
-        //     }).catch(error=>{
-        //         this.setState({error:error});
-        //     })
+        this.props.onInitIngredients();
     }
 
     updatePurchasable=(ingredients)=>{
@@ -46,33 +40,7 @@ class BurgerBuilder extends Component{
                     },0);
         return sum>0;
     }
-    //  addIngredientHandler=(type)=>{
-    //     const oldCount=this.state.ingredients[type];
-    //     const updateCounted=oldCount+1;
-    //     const updatedIngredients={...this.state.ingredients};
-    //     updatedIngredients[type]=updateCounted;
-    //     const priceAddition=INGREDIENT_PRICE[type];
-    //     const oldPrice=this.state.totalPrice;
-    //     const newPrice=oldPrice+priceAddition;
-    //     this.setState({totalPrice:newPrice,ingredients:updatedIngredients});
-    //     this.updatePurchasable(updatedIngredients);
-    // }
-    // removeIngredienthandler=(type)=>{
-    //     const oldCount=this.state.ingredients[type];
-    //     let updateCounted=oldCount-1;
-    //     if(updateCounted<0)
-    //         updateCounted=0;
-    //     const updatedIngredients={...this.state.ingredients};
-    //     updatedIngredients[type]=updateCounted;
-    //     const priceAddition=INGREDIENT_PRICE[type];
-    //     const oldPrice=this.state.totalPrice;
-    //     let newPrice=oldPrice-priceAddition;
-    //     if(newPrice<0)
-    //         newPrice=0;
-    //     this.setState({totalPrice:newPrice,ingredients:updatedIngredients});
-    //     this.updatePurchasable(updatedIngredients);
-    // }
-   
+
     purchaseHandler=()=>{
         this.setState({purchasing:true});
     }
@@ -83,6 +51,7 @@ class BurgerBuilder extends Component{
         this.setState({purchasing:false});
     }
     ContinuePurchaseHandler=()=>{
+        this.props.onInitPurchased()
         this.props.history.push('/checkout');
     }
     render(){
@@ -91,7 +60,7 @@ class BurgerBuilder extends Component{
             disableInfo[i]=disableInfo[i]<=0;
         }
         let orderSummary=null;
-        let burger=this.state.error? <p>Ingredients can't be loaded!</p>: <Spinner />;
+        let burger=this.props.error? <p>Ingredients can't be loaded!</p>: <Spinner />;
         if(this.props.ings){
             burger=(
                 <Aux>
@@ -111,9 +80,9 @@ class BurgerBuilder extends Component{
                cancelPurchaseHandler={()=>this.CancelPurchaseHandler()}
             />
         }
-         if(this.state.loading){
-            orderSummary= <Spinner />;
-        }
+        //  if(this.state.loading){
+        //     orderSummary= <Spinner />;
+        //}
         
         return(
           
@@ -130,15 +99,18 @@ class BurgerBuilder extends Component{
 
 const mapStateToProps=state=>{
     return{
-        ings:state.ingredients,
-        price:state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price:state.burgerBuilder.totalPrice,
+        error:state.burgerBuilder.error
     }
 }
 
 const mapDispatchToProps=dispatch=>{
     return{
-        onIngredientAdded:(ingName)=>dispatch({type:actionTypes.ADD_INGREDIENT,ingredientName:ingName}),
-        onIngredientRemoved:(ingName)=>dispatch({type:actionTypes.REMOVE_INGREDIENT,ingredientName:ingName})
+        onIngredientAdded:(ingName)=>dispatch(actions.addIngredient(ingName)),
+        onIngredientRemoved:(ingName)=>dispatch(actions.removeIngredient(ingName)),
+        onInitIngredients:()=>dispatch(actions.initIngredients()),
+        onInitPurchased:()=>dispatch(actions.purchaseInit())
     }
 }
 
