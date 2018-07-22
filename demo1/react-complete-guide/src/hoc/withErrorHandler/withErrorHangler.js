@@ -23,7 +23,6 @@ const withErrorHandler =(WrappedComponent,axios)=>{
         }
         errorComfirmedHandler=()=>{
             this.setState({error:null});
-         //   console.log(this.state.error)
         }
         render(){
         return (

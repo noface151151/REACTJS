@@ -32,7 +32,6 @@ export const initIngredients=()=>{
     return dispatch=>{
         axios.get('/ingredients.json')
         .then(resp=>{
-            console.log(resp);
            dispatch(setIngredients(resp.data));
         }).catch(error=>{
             dispatch(fetchIngredientsFailed());

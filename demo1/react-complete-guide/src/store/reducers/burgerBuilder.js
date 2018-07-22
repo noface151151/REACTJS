@@ -1,7 +1,7 @@
 import * as actionType from '../actions/actionTypes';
 import {
     updateObject
-} from '../utillity';
+} from '../../shared/utillity';
 
 const initialStata = {
     ingredients: null,

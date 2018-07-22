@@ -15,4 +15,4 @@ export{
     logout,
     setAuthRedirectPath,
     authCheckState
-} from './auth.js';
+} from './auth';

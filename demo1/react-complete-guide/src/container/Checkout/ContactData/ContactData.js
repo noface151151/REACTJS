@@ -6,6 +6,7 @@ import axios from '../../../axios-order';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import * as actions from '../../../store/actions/index';
+import {updateObject} from '../../../shared/utillity';
 
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHangler';
 class ContactData extends Component{
@@ -119,20 +120,17 @@ class ContactData extends Component{
         if(rules.maxLength){
             isValid=value.length<=rules.maxLength && isValid;
         }
-        //console.log(isValid);
         return isValid;
     }
     inputChangedHandler=(event,inputIdentify)=>{
-        const updatedOrderForm={
-            ...this.state.orderForm
-        };
-        const updatedFormElement={
-            ...updatedOrderForm[inputIdentify]
-        };
-        updatedFormElement.value=event.target.value;
-        updatedFormElement.valid=this.checkValidity(updatedFormElement.value,updatedFormElement.validation);
-        updatedFormElement.touched=true;
-        updatedOrderForm[inputIdentify]=updatedFormElement;
+        const updatedFormElement=updateObject(this.state.orderForm[inputIdentify],{
+            value:event.target.value,
+            valid:this.checkValidity(event.target.value,this.state.orderForm[inputIdentify].validation),
+            touched:true
+        });
+        const updatedOrderForm=updateObject(this.state.orderForm,{
+            [inputIdentify]:updatedFormElement
+        });
         let formIsValid=true;
         for(let inputIdentifier in updatedOrderForm){
             formIsValid=updatedOrderForm[inputIdentifier].valid && formIsValid;
